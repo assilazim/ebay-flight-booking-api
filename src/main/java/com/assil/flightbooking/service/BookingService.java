@@ -33,6 +33,14 @@ public class BookingService {
         String normalizedFlightNumber = request.getFlightNumber().trim();
         String normalizedPassengerName = request.getPassengerName().trim();
 
+        if (normalizedFlightNumber.isEmpty()) {
+            throw new IllegalArgumentException("flightNumber cannot be empty");
+        }
+
+        if (normalizedPassengerName.isEmpty()) {
+            throw new IllegalArgumentException("passengerName cannot be empty");
+        }
+
         Flight flight = flights.get(normalizedFlightNumber);
 
         if (flight == null) {
@@ -41,6 +49,16 @@ public class BookingService {
 
         synchronized (flight) {
             int remainingSeats = flight.getCapacity() - flight.getBookedSeats();
+            
+            if (remainingSeats <= 0) {
+                throw new OverbookingException(
+                    "Flight " + flight.getFlightNumber() + " is fully booked"
+                );
+            }
+
+            if (request.getSeats() <= 0) {
+                throw new IllegalArgumentException("seats must be greater than 0");
+            }
 
             if (request.getSeats() > remainingSeats) {
                 throw new OverbookingException(
