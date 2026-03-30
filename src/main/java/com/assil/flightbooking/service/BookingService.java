@@ -1,8 +1,8 @@
 package com.assil.flightbooking.service;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.stereotype.Service;
 
@@ -19,8 +19,8 @@ import jakarta.annotation.PostConstruct;
 @Service
 public class BookingService {
 
-    private final Map<String, Flight> flights = new HashMap<>();
-    private final Map<String, Booking> bookings = new HashMap<>();
+    private final Map<String, Flight> flights = new ConcurrentHashMap<>();
+    private final Map<String, Booking> bookings = new ConcurrentHashMap<>();
 
     @PostConstruct
     public void loadFlights() {
@@ -30,10 +30,13 @@ public class BookingService {
     }
 
     public BookingResponse createBooking(CreateBookingRequest request) {
-        Flight flight = flights.get(request.getFlightNumber());
+        String normalizedFlightNumber = request.getFlightNumber().trim();
+        String normalizedPassengerName = request.getPassengerName().trim();
+
+        Flight flight = flights.get(normalizedFlightNumber);
 
         if (flight == null) {
-            throw new FlightNotFoundException("Flight not found: " + request.getFlightNumber());
+            throw new FlightNotFoundException("Flight not found: " + normalizedFlightNumber);
         }
 
         synchronized (flight) {
@@ -50,14 +53,13 @@ public class BookingService {
             String bookingId = UUID.randomUUID().toString();
             Booking booking = new Booking(
                     bookingId,
-                    request.getFlightNumber(),
-                    request.getPassengerName(),
+                    normalizedFlightNumber,
+                    normalizedPassengerName,
                     request.getSeats(),
                     "CONFIRMED"
             );
 
             bookings.put(bookingId, booking);
-
             return toResponse(booking);
         }
     }
@@ -76,7 +78,8 @@ public class BookingService {
         }
 
         synchronized (flight) {
-            flight.setBookedSeats(flight.getBookedSeats() - booking.getSeats());
+            int updatedBookedSeats = flight.getBookedSeats() - booking.getSeats();
+            flight.setBookedSeats(Math.max(0, updatedBookedSeats));
             bookings.remove(bookingId);
         }
     }
