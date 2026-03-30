@@ -53,7 +53,7 @@ curl -X POST http://localhost:8080/bookings \
 ```bash
 curl -X DELETE http://localhost:8080/bookings/{bookingId}
 ```
-## Overbooking check - Expected 409:
+### Overbooking check - Expected 409:
 ```bash
 curl -i -X POST http://localhost:8080/bookings \
   -H "Content-Type: application/json" \
@@ -63,7 +63,7 @@ curl -i -X POST http://localhost:8080/bookings \
     "seats": 999
   }'
 ```
-## Validation check - Expected 400:
+### Validation check - Expected 400:
 ```bash
 curl -i -X POST http://localhost:8080/bookings \
   -H "Content-Type: application/json" \
@@ -73,7 +73,7 @@ curl -i -X POST http://localhost:8080/bookings \
     "seats": 0
   }'
 ```
-## Missing flight check - Expected 404:
+### Missing flight check - Expected 404:
 ```bash
 curl -i -X POST http://localhost:8080/bookings \
   -H "Content-Type: application/json" \
@@ -86,3 +86,75 @@ curl -i -X POST http://localhost:8080/bookings \
 ########
 
 With more time may seperate storage concerns within a class and inject within service class. 
+
+
+## Full Prompts Used:
+
+### Prompt 1:
+
+Create a minimal Spring Boot Java REST API for a flight booking system.
+Constraints:
+- Use Spring Boot and Java
+- In-memory storage only using HashMap, no database
+- No authentication or authorization
+- No flight search
+- Assume the client already knows the flight number
+- Ensure flights cannot be overbooked
+- Only booking APIs are required
+- Keep the scope small enough for a 60-minute take-home assignment
+
+Implement:
+
+- POST /bookings to create a booking
+- DELETE /bookings/{bookingId} to cancel a booking
+
+Use a few preloaded flights in memory on startup.
+Requirements:
+
+- Use clean package structure: controller, service, model, dto, exception
+- Use proper HTTP methods and status codes
+- Add basic validation
+- Include simple global exception handling
+- Keep the code clean, simple, and not overengineered
+
+### Prompt 2:
+
+Improve the existing Spring Boot flight booking API while keeping it lightweight and within the original take-home scope.
+
+Requirements:
+
+- Keep in-memory storage only
+- Keep only booking APIs (no retrieval endpoints)
+- Improve concurrency safety for a single-instance application
+- Replace HashMap with a more concurrency-safe in-memory structure where appropriate
+- Trim and normalize input values before processing
+- Keep overbooking prevention correct
+- Ensure cancellation does not create invalid seat counts
+- Keep validation, exception handling, and HTTP status codes clean and simple
+- Do not add a database, authentication, search, or extra features
+- Keep the code easy to read and not overengineered
+
+### Prompt 3:
+
+Add basic integration tests for the Spring Boot flight booking API.
+Requirements:
+
+- Use Spring Boot test support
+- Keep tests simple and focused
+- Test the core flows only:
+    - successful booking returns 201
+    - overbooking returns 409
+    - cancel booking returns 204
+- Use the existing in-memory setup
+- Do not add unnecessary mocking or complexity
+
+### Prompt 4:
+
+Fix Spring Boot project configuration to ensure test support works correctly.
+
+- Replace non-standard dependencies with spring-boot-starter-web and spring-boot-starter-test
+- Align project with Spring Boot 3.x conventions
+- Ensure MockMvc and SpringBootTest annotations resolve properly
+- Keep the project simple and aligned with the take-home scope
+
+
