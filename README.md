@@ -34,7 +34,7 @@ Run the service with:
 
 ```bash
 ./mvnw spring-boot:run
-
+```
 ## Example Requests
 
 ### Create a Booking - Expected 201:
@@ -47,12 +47,12 @@ curl -X POST http://localhost:8080/bookings \
     "passengerName": "Assil Azim",
     "seats": 2
   }'
-
+```
 ### Cancel a booking - Expected 204:
 
 ```bash
 curl -X DELETE http://localhost:8080/bookings/{bookingId}
-
+```
 ## Overbooking check - Expected 409:
 ```bash
 curl -i -X POST http://localhost:8080/bookings \
@@ -62,7 +62,7 @@ curl -i -X POST http://localhost:8080/bookings \
     "passengerName": "Too Many Seats",
     "seats": 999
   }'
-
+```
 ## Validation check - Expected 400:
 ```bash
 curl -i -X POST http://localhost:8080/bookings \
@@ -72,7 +72,7 @@ curl -i -X POST http://localhost:8080/bookings \
     "passengerName": "",
     "seats": 0
   }'
-
+```
 ## Missing flight check - Expected 404:
 ```bash
 curl -i -X POST http://localhost:8080/bookings \
@@ -82,7 +82,7 @@ curl -i -X POST http://localhost:8080/bookings \
     "passengerName": "Assil Azim",
     "seats": 1
   }'
-
+```
 ########
 
 With more time may seperate storage concerns within a class and inject within service class. 
