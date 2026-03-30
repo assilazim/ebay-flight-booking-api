@@ -83,10 +83,6 @@ curl -i -X POST http://localhost:8080/bookings \
     "seats": 1
   }'
 ```
-########
-
-With more time may seperate storage concerns within a class and inject within service class. 
-
 
 ## Full Prompts Used:
 
@@ -157,4 +153,12 @@ Fix Spring Boot project configuration to ensure test support works correctly.
 - Ensure MockMvc and SpringBootTest annotations resolve properly
 - Keep the project simple and aligned with the take-home scope
 
+## With more time:
+
+- With more time may seperate storage concerns within a repo / store layer and inject within service class. 
+- Add retrieval endpoints (e.g., fetch booking or check flight availability) if the API scope were expanded
+- Improve test coverage, especially around edge cases and concurrency scenarios
+- Introduce idempotency support for booking and cancellation requests
+- Add more robust concurrency handling and stress testing beyond the current single-instance assumptions
+- Replace in-memory storage with a persistent database if durability and multi-instance scaling were required
 
